@@ -1650,8 +1650,14 @@ private JPanel createFeedbackPanel() {
                         
                         // GENERATE DIGITAL INVOICE
                         try {
+                            // String invoiceName = "Invoice_" + p.getId() + "_" + (System.currentTimeMillis() / 1000) + ".txt";
+                            // File invoiceFile = new File(invoiceName);
+                            File userDir = new File("user_data_" + loggedInUser);
+                            if (!userDir.exists()) userDir.mkdirs(); // Create folder if it doesn't exist
+    
                             String invoiceName = "Invoice_" + p.getId() + "_" + (System.currentTimeMillis() / 1000) + ".txt";
-                            File invoiceFile = new File(invoiceName);
+                            File invoiceFile = new File(userDir, invoiceName);
+
                             PrintWriter out = new PrintWriter(new java.io.FileWriter(invoiceFile));
                             out.println("=========================================");
                             out.println("          SMART INVENTORY SYSTEM         ");
@@ -1887,8 +1893,14 @@ private JPanel createFeedbackPanel() {
                         Graphics2D g2 = image.createGraphics();
                         drawPanel.paint(g2); 
                         g2.dispose();
+                        // String filename = "Barcode_" + p.getId() + ".png";
+                        // File outputFile = new File(filename);
+                        File userDir = new File("user_data_" + loggedInUser);
+                        if (!userDir.exists()) userDir.mkdirs();
+    
                         String filename = "Barcode_" + p.getId() + ".png";
-                        File outputFile = new File(filename);
+                        File outputFile = new File(userDir, filename);
+
                         javax.imageio.ImageIO.write(image, "png", outputFile);
                         JOptionPane.showMessageDialog(barcodeDialog, "Barcode saved successfully as:\n" + outputFile.getAbsolutePath());
                     } catch (Exception ex) {
@@ -2027,7 +2039,11 @@ private JPanel createFeedbackPanel() {
         JButton auditBtn = styleButton("Export Audit Log", new Color(52, 152, 219), Color.WHITE);
         auditBtn.addActionListener(e -> {
             try {
-                File logFile = new File("Audit_Log_" + loggedInUser + ".txt");
+                // File logFile = new File("Audit_Log_" + loggedInUser + ".txt");
+                File userDir = new File("user_data_" + loggedInUser);
+                if (!userDir.exists()) userDir.mkdirs();
+    
+                File logFile = new File(userDir, "Audit_Log_" + loggedInUser + ".txt");
                 PrintWriter pw = new PrintWriter(new java.io.FileWriter(logFile));
                 pw.println("=== OFFICIAL AUDIT LOG ===");
                 pw.println("User Account: " + loggedInUser);

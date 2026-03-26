@@ -315,7 +315,12 @@ public class POSModule {
             receipt.append("      Thank you for your business!       \n");
 
             try {
-                File receiptFile = new File("Receipt_" + txId + ".txt");
+                // File receiptFile = new File("Receipt_" + txId + ".txt");
+                String user = db.getLoggedInUser();
+                File userDir = new File("user_data_" + user);
+                if (!userDir.exists()) userDir.mkdirs();
+    
+                File receiptFile = new File(userDir, "Receipt_" + txId + ".txt");
                 PrintWriter out = new PrintWriter(receiptFile);
                 out.print(receipt.toString());
                 out.close();

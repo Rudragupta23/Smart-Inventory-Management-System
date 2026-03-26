@@ -1,4 +1,6 @@
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -6,16 +8,17 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-// Added imports for encryption 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
 
 public class InventoryDatabase {
     private List<Product> products;
     private List<String> activityLogs; 
     private String currentUserFile = "inventory_data.csv"; 
+
+    // This will be dynamically set to "inventory_[username].csv" when a user logs in, allowing for separate data files per user.
+    private String loggedInUser = "unknown";
+    public String getLoggedInUser() { return this.loggedInUser; }
     
     // Maps username to [password, fullName, email, personalNotes, profilePicPath]
     private Map<String, String[]> users; 
@@ -61,6 +64,7 @@ public class InventoryDatabase {
 
     // Sets the active user and automatically loads their specific data file
     public void setCurrentUser(String username) {
+        this.loggedInUser = username;
         this.currentUserFile = "inventory_" + username + ".csv";
         this.products.clear();
         this.activityLogs.clear();
@@ -133,7 +137,14 @@ public boolean registerUser(String username, String password, String fullName, S
             if (inventoryFile.exists()) {
                 inventoryFile.delete();
             }
-            
+
+            // ADD THIS BLOCK TO DELETE THEIR EXPORT FOLDER 
+            File userDir = new File("user_data_" + username);
+            if (userDir.exists() && userDir.isDirectory()) {
+                for (File f : userDir.listFiles()) { f.delete(); }
+                userDir.delete();
+            }
+
             // 2. Remove from the internal Map
             users.remove(username);
             
