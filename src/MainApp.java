@@ -39,6 +39,8 @@ public class MainApp extends JFrame {
     private JTextArea logArea;
     private JTabbedPane tabbedPane;
     private boolean isDarkMode = false; 
+    private String systemEmail = "";
+    private String systemAppPassword = "";
 
     // Session State Variables
     private String generatedResetCode = "";
@@ -47,9 +49,32 @@ public class MainApp extends JFrame {
 
     public MainApp() {
         db = new InventoryDatabase();
+        loadEnv();
         showLoginScreen(); 
     }
-
+    private void loadEnv() {
+        java.util.Properties props = new java.util.Properties();
+        try {
+            // This checks for the .env file in the root folder (../) if you run from src,
+            // or the current folder if you run from the root.
+            java.io.File envFile = new java.io.File("../.env");
+            if (!envFile.exists()) {
+                envFile = new java.io.File(".env"); 
+            }
+            
+            if (envFile.exists()) {
+                java.io.FileInputStream in = new java.io.FileInputStream(envFile);
+                props.load(in);
+                this.systemEmail = props.getProperty("SYSTEM_EMAIL");
+                this.systemAppPassword = props.getProperty("SYSTEM_APP_PASSWORD");
+                in.close();
+            } else {
+                System.out.println("⚠️ Warning: .env file not found. Email features will be disabled.");
+            }
+        } catch (Exception e) {
+            System.out.println("⚠️ Error loading .env file: " + e.getMessage());
+        }
+    }
     // CALENDAR 
     class CalendarDialog extends JDialog {
         private String selectedDate = "";
@@ -511,8 +536,8 @@ public class MainApp extends JFrame {
                 userResetting = u;
                 generatedResetCode = String.format("%06d", new java.util.Random().nextInt(999999));
                 
-                String systemEmail = "23rudragupta@gmail.com"; 
-                String systemAppPassword = "zumz nzae vhjr lmwo";
+                String systemEmail = this.systemEmail; 
+                String systemAppPassword = this.systemAppPassword;
 
                 String tempMaskedEmail = targetEmail;
                 if(targetEmail.contains("@")) {
@@ -1362,8 +1387,7 @@ private JPanel createFeedbackPanel() {
             sendBtn.setEnabled(false);
 
             new Thread(() -> {
-                boolean success = EmailService.sendFeedbackEmail("23rudragupta@gmail.com", name, email, finalMessage, "23rudragupta@gmail.com", "zumz nzae vhjr lmwo");
-                SwingUtilities.invokeLater(() -> {
+                boolean success = EmailService.sendFeedbackEmail("23rudragupta@gmail.com", name, email, finalMessage, this.systemEmail, this.systemAppPassword);                SwingUtilities.invokeLater(() -> {
                     sendBtn.setText("Submit Feedback");
                     sendBtn.setEnabled(true);
                     if(success) {
@@ -2033,8 +2057,8 @@ private JPanel createFeedbackPanel() {
             }
 
             String userEmail = db.getUserDetails(loggedInUser)[2];
-            String sysEmail = "23rudragupta@gmail.com"; 
-            String sysAppPass = "zumz nzae vhjr lmwo";
+            String sysEmail = this.systemEmail; 
+            String sysAppPass = this.systemAppPassword;
 
             emailAlertBtn.setText("Sending..."); emailAlertBtn.setEnabled(false);
             new Thread(() -> {
