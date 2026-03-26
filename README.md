@@ -2,17 +2,6 @@
 
 A comprehensive, enterprise-grade desktop application built in Java. This system seamlessly bridges the gap between backend warehouse management and customer-facing Point of Sale (POS) operations. It features real-time data analytics, automated low-stock email alerts, and a completely custom-built modern UI with Dark Mode support.
 
----
-
-## 📑 Table of Contents
-1. [Objectives & Outcomes](#-objectives--outcomes)
-2. [Core Modules & Features](#-core-modules--features)
-3. [Screenshots](#-system-screenshots)
-4. [Advanced Technical Concepts](#-advanced-technical-concepts-used)
-5. [Installation & Setup](#-installation--setup)
-6. [Team & Contributors](#-team--contributors)
-
----
 
 ## 🎯 Objectives & Outcomes
 
