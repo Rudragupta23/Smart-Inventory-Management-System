@@ -2,14 +2,6 @@
 
 A comprehensive, enterprise-grade desktop application built in Java. This system seamlessly bridges the gap between backend warehouse management and customer-facing Point of Sale (POS) operations. It features real-time data analytics, automated low-stock email alerts, and a completely custom-built modern UI with Dark Mode support.
 
-
-## 🎯 Objectives & Outcomes
-
-### Objectives
-* **Eliminate Stockouts:** Implement automated tracking and AI-recommended restock alerts to prevent inventory shortages.
-* **Unified Operations:** Create a single, cohesive platform that handles both B2B supply chain logistics and B2C Point of Sale transactions.
-* **Data-Driven Decisions:** Provide business owners with live, visual representations of their financial standing and category distributions.
-
 ### Project Outcomes
 * **Functional POS System:** A digital cash register that instantly calculates totals, deducts physical stock upon checkout, and generates official `.txt` receipts.
 * **Smart Supply Chain:** The system intelligently identifies low stock, recommends reorder quantities, and logs all physical receiving events.
@@ -19,35 +11,47 @@ A comprehensive, enterprise-grade desktop application built in Java. This system
 
 ## 🚀 Core Modules & Features
 
-### 1. 🛡️ Authentication & Security
-* **Modern Split-Pane UI:** Sleek, web-style login and registration forms.
-* **Live Validation:** Real-time RegEx validation for email formats and phone numbers.
+### 1. 🛡️ Authentication, Automatic Logout & Security
+* **Auto-Lock Session Timer (Automatic Logout):** A built-in security thread continuously monitors keyboard and mouse activity. If the system is idle for 3 minutes, it automatically saves all database changes, logs the user out, and locks the workspace to protect sensitive business information.
+* **Modern Split-Pane UI:** Sleek, web-style login and registration forms with live RegEx validation for email formats and phone numbers.
 * **Secure Recovery:** Automated 6-digit OTP codes sent directly to user emails via Java `SSLSocket` integration for password resets.
 
-### 2. 📊 Inventory Dashboard
-* **Full CRUD Operations:** Add, update, and delete products with specific lead times and supplier data.
-* **Smart CSV Import/Export:** Bulk upload inventory data. The system automatically detects duplicate Product IDs and safely auto-increments them.
-* **Barcode Generation:** Converts Product IDs into visually accurate, scannable PNG Barcode images.
-* **Dynamic Filtering:** Instantly isolate low-stock items (< 20 units) with a single toggle pill.
+### 2. 👤 User Profiles & Account Management
+* **Custom Avatars:** Users can upload their own PNG/JPG profile pictures, which the system dynamically crops into a modern circular avatar.
+* **Private Workspace:** A dedicated, auto-saving digital notepad for users to keep personal shift notes or daily reminders.
+* **Permanent Account Deletion:** Users have full control over their data. The "Delete Account" function permanently erases the user's credentials and deletes their specific `inventory_username.csv` file from the local system (requires password confirmation to prevent accidental deletion).
 
-### 3. 🛒 Point of Sale (POS) & Billing
+### 3. 📖 Interactive "How to Use" Guide
+* **Built-in Documentation:** A dedicated, dynamically rendered UI manual built directly into the app. It provides beautifully formatted, color-coded cards explaining how to use the Inventory, POS, Supply Chain, Analytics, and Security features—all without needing an external web browser or PDF.
+
+### 4. 📊 Inventory Dashboard
+* **Full CRUD Operations:** Add, update, and delete products with specific lead times and supplier data.
+* **Smart CSV Import/Export:** Bulk upload inventory data. The system utilizes a "Smart ID Resolver" that automatically detects duplicate Product IDs and safely auto-increments them (e.g., `ITEM-1`, `ITEM-2`) to prevent data corruption.
+* **Custom Barcode Generation:** Converts Product IDs into visually accurate, scannable binary Barcode images drawn entirely with `Graphics2D` and exportable as PNGs.
+* **Dynamic Filtering:** Instantly isolate low-stock items (< 20 units) with a single toggle pill.
+* **Direct B2B Dispatching:** Bypass the POS system for bulk wholesale orders. The "Dispatch / Sell" button allows instant stock deduction and automatically generates a dedicated, timestamped `Invoice.txt` file.
+* **Dynamic Custom Categories:** Selecting "Miscellaneous" from the category dropdown triggers a smart prompt allowing users to define and inject entirely new product categories into the system on the fly.
+
+### 5. 🛒 Point of Sale (POS) & Billing
 * **Digital Register:** Split-screen interface for rapid catalog searching and cart building.
 * **Safety Protocols:** Cashiers are hard-coded to be unable to sell more stock than physically available.
-* **Automated Receipts:** Generates timestamped `Receipt_TXN-12345.txt` files directly to the local machine upon successful checkout.
+* **Automated Receipts:** Generates formatted, timestamped `Receipt_TXN-12345.txt` files directly to the local machine upon successful checkout.
 
-### 4. 🚚 Supply Chain & Logging
+### 6. 🚚 Supply Chain & Logging
 * **Purchase Orders:** One-click restock ordering that calculates deficits to reach a 100-unit optimal stock level.
-* **Audit Trails:** A non-editable, timestamped log of every action (sales, deletions, restocks) that can be exported as a secure Audit Log.
-* **Manager Alerts:** Instantly dispatches a formatted "Low Stock Alert" email to the registered manager's inbox.
+* **Audit Trails:** A non-editable, timestamped log of every action (sales, deletions, restocks) that can be exported as a secure `.txt` Audit Log.
+* **Manager Alerts:** Instantly dispatches a formatted "Low Stock Alert" email to the registered manager's inbox containing items that need immediate reordering.
+* **Closed-Loop Order Tracking:** Track the exact status of shipments. Items marked as "Ordered" or "Delayed" can be processed via the "Mark Order Received" button, which automatically updates the status to "Delivered" and injects the physical units into the active inventory.
 
-### 5. 📈 Live Analytics
-* **Real-Time Rendering:** Custom-built Pie, Bar, and Line charts using `Graphics2D`.
-* **Instant Sync:** The exact millisecond a POS sale is completed, the charts instantly redraw to reflect the new financial distributions.
+### 7. 📈 Live Analytics & Feedback
+* **Real-Time Rendering:** Custom-built Pie, Bar, and Line charts built completely from scratch using `Graphics2D`.
+* **Instant Sync:** The exact millisecond a POS sale is completed or inventory is updated, the charts instantly redraw to reflect the new financial distributions.
+* **Direct Developer Feedback:** A built-in form that allows users to rate their experience and send emails directly to the development team.
 
-### 6. 🎨 Personalization
-* **Bulletproof Dark Mode:** A complete UI overhaul system that dynamically repaints tables, text fields, and panels without relying on external UI libraries.
-* **Profile Avatars:** Automatically generates circular letter-avatars or allows users to upload custom PNG/JPG profile pictures.
-* **Private Workspace:** Dedicated, auto-saving text area for users to keep personal shift notes.
+### 8. 🎨 Personalization
+* **Dark Mode:** A complete UI overhaul system that dynamically repaints tables, text fields, and panels without relying on external UI libraries.
+* **Dynamic Data Sorting (Ascending/Descending):** Click any table header to instantly arrange inventory data. The system intelligently sorts alphabetical data (A-Z) and numerical data (Highest-to-Lowest Quantity/Price) for rapid data analysis.
+* **Multi-Parameter Smart Search:** A global search engine that instantly filters the data table not just by Product ID or Name, but also by Category and Supplier Name simultaneously.
 
 ---
 
@@ -70,25 +74,13 @@ A comprehensive, enterprise-grade desktop application built in Java. This system
 
 ## 🔄 System Workflow
 
-1. User logs in / registers
-2. Inventory is loaded from CSV files
-3. User can:
-   - Manage products
-   - Perform sales via POS
-4. System updates stock automatically
-5. Analytics update in real-time
-6. Low stock → Email alert sent
-
-
-## 💻 Advanced Technical Concepts Used
-
-This project was built entirely from scratch without relying on heavy external frameworks like Spring or JavaFX. It demonstrates a deep understanding of core Advanced Java concepts:
-
-* **Java Swing & AWT Mastery:** Custom `DefaultTableCellRenderer` overrides to force table cells to dynamically adapt to dark mode and custom `Graphics2D` algorithms to draw interactive geometry (Charts, Barcodes, Circular Avatars).
-* **Multithreading & Concurrency:** Implementation of background `Thread` processes to handle network requests (Email Dispatching) without freezing the main Event Dispatch Thread (EDT). UI updates are safely queued using `SwingUtilities.invokeLater()`.
-* **File I/O & Serialization:** Utilization of `BufferedReader` and `BufferedWriter` to create a local, scalable CSV-based database. Implemented robust `try-catch` blocks to prevent data corruption during read/write cycles.
-* **Java Collections Framework:** Advanced utilization of `HashMap<String, String[]>` for constant-time user authentication and `List<Product>` for dynamic table sorting and filtering.
-* **Network Sockets:** Bypassed heavy external libraries (like JavaMail API) by utilizing low-level `SSLSocketFactory` to communicate directly with SMTP servers via Base64 encoded streams.
+1. User logs in / registers an account.
+2. System loads the specific `inventory_[username].csv` database for that user.
+3. User can navigate through the built-in "How to Use" guide to learn the system.
+4. User manages products or performs sales via the POS digital register.
+5. System safely deducts stock and instantly updates live Analytics charts.
+6. **Security Trigger:** If inactive for 3 minutes, the system auto-saves and forces an automatic logout to secure the terminal.
+7. Users can manage their account, update avatars, save notes, or permanently delete their data via the Profile page.
 
 ---
 
@@ -96,13 +88,15 @@ This project was built entirely from scratch without relying on heavy external f
 
 - **Language:** Java
 - **UI:** Java Swing, AWT
-- **Database:** CSV-based storage (File I/O)
+- **Database:** Multi-user CSV-based storage (File I/O)
 - **Networking:** SMTP via SSLSocket
-- **Graphics:** Graphics2D (Charts & UI)
+- **Graphics:** Graphics2D (Charts, Avatars, & Barcodes)
 - **Version Control:** Git & GitHub
 
-```
+
 ## 📁 Project Structure
+
+```
 Smart-Inventory-Management-System/
 │
 ├── .gitignore                  # Tells GitHub to ignore compiled .class files and 
@@ -153,7 +147,7 @@ java -version
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/Rudragupta23/Smart-Inventory-Management-System.git](https://github.com/Rudragupta23/Smart-Inventory-Management-System.git)
+git clone [https://github.com/Rudragupta23/Smart-Inventory-Management-System.git](https://github.com/Rudragupta23/Smart-Inventory-Management-System.git)
 
 ## 🚀 How to Run the Project
 
