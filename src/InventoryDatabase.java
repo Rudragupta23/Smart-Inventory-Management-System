@@ -6,6 +6,11 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+// Added imports for encryption 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 
 public class InventoryDatabase {
     private List<Product> products;
@@ -15,6 +20,35 @@ public class InventoryDatabase {
     // Maps username to [password, fullName, email, personalNotes, profilePicPath]
     private Map<String, String[]> users; 
     private final String USERS_FILE = "users_data.csv";
+
+    // SECURITY PROTOCOL (AES ENCRYPTION) 
+    private static final String ALGO = "AES";
+    private static final byte[] keyValue = new byte[] { 'S', 'm', 'a', 'r', 't', 'I', 'n', 'v', 'K', 'e', 'y', '1', '2', '3', '4', '5' }; // 16-byte secret key
+
+    private String encrypt(String data) {
+        try {
+            Key key = new SecretKeySpec(keyValue, ALGO);
+            Cipher c = Cipher.getInstance(ALGO);
+            c.init(Cipher.ENCRYPT_MODE, key);
+            byte[] encVal = c.doFinal(data.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(encVal);
+        } catch (Exception e) {
+            return data; 
+        }
+    }
+
+    private String decrypt(String encryptedData) {
+        try {
+            Key key = new SecretKeySpec(keyValue, ALGO);
+            Cipher c = Cipher.getInstance(ALGO);
+            c.init(Cipher.DECRYPT_MODE, key);
+            byte[] decodedValue = Base64.getDecoder().decode(encryptedData);
+            byte[] decValue = c.doFinal(decodedValue);
+            return new String(decValue, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            return encryptedData; 
+        }
+    }
 
     public InventoryDatabase() {
         products = new ArrayList<>();
@@ -109,6 +143,47 @@ public boolean registerUser(String username, String password, String fullName, S
         }
     }
 
+    // private void loadUsersFromFile() {
+    //     try {
+    //         File file = new File(USERS_FILE);
+    //         if (!file.exists()) return;
+    //         BufferedReader reader = new BufferedReader(new FileReader(file));
+    //         String line;
+    //         while ((line = reader.readLine()) != null) {
+    //             String[] data = line.split(",");
+    //             if (data.length >= 7) {
+    //                 String notes = "";
+    //                 try { notes = new String(Base64.getDecoder().decode(data[4])); } catch (Exception e) {}
+    //                 users.put(data[0], new String[]{data[1], data[2], data[3], notes, data[5], data[6]});
+    //             } else if (data.length >= 5) {
+    //                 String notes = "";
+    //                 try { notes = new String(Base64.getDecoder().decode(data[4])); } catch (Exception e) {}
+    //                 users.put(data[0], new String[]{data[1], data[2], data[3], notes, ""});
+    //             } else if (data.length >= 4) {
+    //                 users.put(data[0], new String[]{data[1], data[2], data[3], "", ""});
+    //             } else if (data.length == 2) { 
+    //                 users.put(data[0], new String[]{data[1], "Unknown", "Unknown", "", ""});
+    //             }
+    //         }
+    //         reader.close();
+    //     } catch (IOException e) { e.printStackTrace(); }
+    // }
+
+// private void saveUsersToFile() {
+//         try {
+//             BufferedWriter writer = new BufferedWriter(new FileWriter(USERS_FILE));
+//             for (Map.Entry<String, String[]> entry : users.entrySet()) {
+//                 String[] d = entry.getValue();
+//                 String notesB64 = Base64.getEncoder().encodeToString(d[3].getBytes());
+                
+//                 // Now writing 7 columns including the phone number (d[5])
+//                 writer.write(entry.getKey() + "," + d[0] + "," + d[1] + "," + d[2] + "," + notesB64 + "," + d[4] + "," + d[5]);
+//                 writer.newLine();
+//             }
+//             writer.close();
+//         } catch (IOException e) { e.printStackTrace(); }
+//     }
+
     private void loadUsersFromFile() {
         try {
             File file = new File(USERS_FILE);
@@ -116,6 +191,9 @@ public boolean registerUser(String username, String password, String fullName, S
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = reader.readLine()) != null) {
+                // Decrypt the line before reading the data
+                line = decrypt(line); 
+                
                 String[] data = line.split(",");
                 if (data.length >= 7) {
                     String notes = "";
@@ -135,15 +213,16 @@ public boolean registerUser(String username, String password, String fullName, S
         } catch (IOException e) { e.printStackTrace(); }
     }
 
-private void saveUsersToFile() {
+    private void saveUsersToFile() {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(USERS_FILE));
             for (Map.Entry<String, String[]> entry : users.entrySet()) {
                 String[] d = entry.getValue();
                 String notesB64 = Base64.getEncoder().encodeToString(d[3].getBytes());
                 
-                // Now writing 7 columns including the phone number (d[5])
-                writer.write(entry.getKey() + "," + d[0] + "," + d[1] + "," + d[2] + "," + notesB64 + "," + d[4] + "," + d[5]);
+                // Combine the line first, then encrypt the entire line
+                String plainLine = entry.getKey() + "," + d[0] + "," + d[1] + "," + d[2] + "," + notesB64 + "," + d[4] + "," + d[5];
+                writer.write(encrypt(plainLine));
                 writer.newLine();
             }
             writer.close();
@@ -208,19 +287,53 @@ public List<Product> searchProducts(String keyword) {
         return results;
     }
 
+//     public void saveToFile() throws IOException {
+//         BufferedWriter writer = new BufferedWriter(new FileWriter(currentUserFile));
+//         for (Product p : products) {
+//             writer.write(p.getId() + "," + p.getName() + "," + p.getCategory() + "," 
+//                          + p.getQuantity() + "," + p.getPrice() + "," + p.getTargetDate() + "," 
+//                          + p.getSupplierStatus() + "," + p.getSupplierName() + "," + p.getLeadTimeDays());
+//             writer.newLine();
+//         }
+//         writer.close();
+//         logActivity("Database saved successfully.");
+//     }
+
+// public void loadFromFile() throws IOException {
+//         File file = new File(currentUserFile);
+//         if (!file.exists()) return;
+        
+//         products.clear();
+//         BufferedReader reader = new BufferedReader(new FileReader(file));
+//         String line;
+//         while ((line = reader.readLine()) != null) {
+//             String[] data = line.split(",");
+//             // This is the correct logic for Products, not Users!
+//             if (data.length >= 9) { 
+//                 products.add(new Product(data[0], data[1], data[2], 
+//                     Integer.parseInt(data[3]), Double.parseDouble(data[4]), 
+//                     data[5], data[6], data[7], Integer.parseInt(data[8])));
+//             }
+//         }
+//         reader.close();
+//         logActivity("Database loaded successfully.");
+//     }
+
     public void saveToFile() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(currentUserFile));
         for (Product p : products) {
-            writer.write(p.getId() + "," + p.getName() + "," + p.getCategory() + "," 
+            // Combine line first, then encrypt
+            String plainLine = p.getId() + "," + p.getName() + "," + p.getCategory() + "," 
                          + p.getQuantity() + "," + p.getPrice() + "," + p.getTargetDate() + "," 
-                         + p.getSupplierStatus() + "," + p.getSupplierName() + "," + p.getLeadTimeDays());
+                         + p.getSupplierStatus() + "," + p.getSupplierName() + "," + p.getLeadTimeDays();
+            writer.write(encrypt(plainLine));
             writer.newLine();
         }
         writer.close();
         logActivity("Database saved successfully.");
     }
 
-public void loadFromFile() throws IOException {
+    public void loadFromFile() throws IOException {
         File file = new File(currentUserFile);
         if (!file.exists()) return;
         
@@ -228,8 +341,10 @@ public void loadFromFile() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line;
         while ((line = reader.readLine()) != null) {
+            // Decrypt the line before splitting
+            line = decrypt(line); 
+            
             String[] data = line.split(",");
-            // This is the correct logic for Products, not Users!
             if (data.length >= 9) { 
                 products.add(new Product(data[0], data[1], data[2], 
                     Integer.parseInt(data[3]), Double.parseDouble(data[4]), 
