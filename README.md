@@ -165,3 +165,13 @@ javac *.java
 ```bash
 java MainApp
 ```
+
+## 🤝 Contributing
+
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+Please read `CODE_OF_CONDUCT.md` for details on our code of conduct and the process for submitting pull requests to us.
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
