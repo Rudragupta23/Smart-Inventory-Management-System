@@ -146,8 +146,9 @@ java -version
 ## ⚙️ Installation & Setup
 
 1. **Clone the repository:**
-   ```bash
+```bash
 git clone [https://github.com/Rudragupta23/Smart-Inventory-Management-System.git](https://github.com/Rudragupta23/Smart-Inventory-Management-System.git)
+```
 
 ## 🚀 How to Run the Project
 
