@@ -9,7 +9,7 @@ A comprehensive, enterprise-grade desktop application built in Java. This system
 
 ---
 
-## 🚀 Core Modules & Features
+## 🚀 Core Module & Features
 
 ### 1. 🛡️ Authentication, Automatic Logout & Security
 * **Auto-Lock Session Timer (Automatic Logout):** A built-in security thread continuously monitors keyboard and mouse activity. If the system is idle for 3 minutes, it automatically saves all database changes, logs the user out, and locks the workspace to protect sensitive business information.
