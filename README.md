@@ -88,7 +88,7 @@ A comprehensive, enterprise-grade desktop application built in Java. This system
 
 - **Language:** Java
 - **UI:** Java Swing, AWT
-- **Database:** Multi-user CSV-based storage (File I/O)
+- **Database:** Multi-user CSV-based storage
 - **Networking:** SMTP via SSLSocket
 - **Graphics:** Graphics2D (Charts, Avatars, & Barcodes)
 - **Version Control:** Git & GitHub
