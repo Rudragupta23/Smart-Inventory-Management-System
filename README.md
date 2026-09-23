@@ -17,7 +17,7 @@ A comprehensive, enterprise-grade desktop application built in Java. This system
 * **Secure Recovery:** Automated 6-digit OTP codes sent directly to user emails via Java `SSLSocket` integration for password resets.
 
 ### 2. 👤 User Profiles & Account Management
-* **Custom Avatars:** Users can upload their own PNG/JPG profile pictures, which the system dynamically crops into a modern circular avatar.
+* **Custom Avatars:** Users can upload their own PNG/JPG profile picture, which the system dynamically crops into a modern circular avatar.
 * **Private Workspace:** A dedicated, auto-saving digital notepad for users to keep personal shift notes or daily reminders.
 * **Permanent Account Deletion:** Users have full control over their data. The "Delete Account" function permanently erases the user's credentials and deletes their specific `inventory_username.csv` file from the local system (requires password confirmation to prevent accidental deletion).
 
