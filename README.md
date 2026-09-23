@@ -1,6 +1,6 @@
 # 📦 Smart Inventory & Supply Chain Application System
 
-A comprehensive, enterprise-grade desktop application built in Java. This system seamlessly bridges the gap between backend warehouse management and customer-facing Point of Sale (POS) operations. It features real-time data analytics, automated low-stock email alerts, and a completely custom-built modern UI with Dark Mode support.
+A comprehensive, enterprise-grade desktop application built in Java. This system seamlessly bridges the gap between backend warehouse management and customer-facing Point of Sale (POS) operations. It features real-time data analytics, automated low-stock email alerts and a completely custom-built modern UI with Dark Mode support.
 
 ### Project Outcomes
 * **Functional POS System:** A digital cash register that instantly calculates totals, deducts physical stock upon checkout, and generates official `.txt` receipts.
